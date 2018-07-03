@@ -2,6 +2,8 @@
 ## Code for solving open ai environments
 DDPG source: https://github.com/pemami4911/deep-rl
 
+The final code will be provided in the Jupyter notebooks of this repository.
+
 ### Deep deterministic policy gradient actor-critic model for Pendulum-v0 and Taxi-v2 environment
 This is the first agent that will be created. Details about the background of the agent can be found here: 
 http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html
