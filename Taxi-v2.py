@@ -6,7 +6,7 @@ import math
 from collections import defaultdict
 
 
-env = gym.make("Taxi-v2")
+env = gym.make('Taxi-v2')
 env.reset()
 env.observation_space.n
 env.render()
