@@ -408,3 +408,93 @@ if __name__ == '__main__':
     pp.pprint(args)
 
     main(args)
+
+
+# Constants
+TAU = 0.001
+ACTOR_LEARNING_RATE = 0.0001
+CRITIC_LEARNING_RATE = 0.001
+BUFFER_SIZE = 1000000
+MINIBATCH_SIZE = 64
+MAX_EPISODES = 50000
+MAX_EP_STEPS = 1000
+GAMMA = 0.99
+...
+
+with tf.Session() as sess:
+
+    env = gym.make('Pendulum-v0')
+
+    state_dim = env.observation_space.shape[0]
+    action_dim = env.action_space.shape[0]
+    action_bound = env.action_space.high
+    # Ensure action bound is symmetric
+    assert (env.action_space.high == -env.action_space.low)
+
+    actor = ActorNetwork(sess, state_dim, action_dim, action_bound, \
+        ACTOR_LEARNING_RATE, TAU)
+
+    critic = CriticNetwork(sess, state_dim, action_dim, \
+        CRITIC_LEARNING_RATE, TAU, actor.get_num_trainable_vars())
+
+    actor_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(action_dim))
+
+    # Initialize our Tensorflow variables
+    sess.run(tf.initialize_all_variables())
+
+    # Initialize target network weights
+    actor.update_target_network()
+    critic.update_target_network()
+
+    # Initialize replay memory
+    replay_buffer = ReplayBuffer(BUFFER_SIZE)
+
+    for i in range(MAX_EPISODES):
+
+        s = env.reset()
+
+        for j in range(MAX_EP_STEPS):
+
+            if RENDER_ENV:
+                env.render()
+
+            # Added exploration noise. In the literature, they use
+            # the Ornstein-Uhlenbeck stochastic process for control tasks
+            # that deal with momentum
+            a = actor.predict(np.reshape(s, (1, actor.s_dim))) + actor_noise()
+
+            s2, r, terminal, info = env.step(a[0])
+
+            replay_buffer.add(np.reshape(s, (actor.s_dim,)), np.reshape(a, (actor.a_dim,)), r, \
+                terminal, np.reshape(s2, (actor.s_dim,)))
+
+            # Keep adding experience to the memory until
+            # there are at least minibatch size samples
+            if replay_buffer.size() > MINIBATCH_SIZE:
+                s_batch, a_batch, r_batch, t_batch, s2_batch = \
+                    replay_buffer.sample_batch(MINIBATCH_SIZE)
+
+                # Calculate targets
+                target_q = critic.predict_target(s2_batch, actor.predict_target(s2_batch))
+
+                y_i = []
+                for k in range(MINIBATCH_SIZE):
+                    if t_batch[k]:
+                        y_i.append(r_batch[k])
+                    else:
+                        y_i.append(r_batch[k] + GAMMA * target_q[k])
+
+                # Update the critic given the targets
+                predicted_q_value, _ = critic.train(s_batch, a_batch, np.reshape(y_i, (MINIBATCH_SIZE, 1)))
+
+                # Update the actor policy using the sampled gradient
+                a_outs = actor.predict(s_batch)
+                grads = critic.action_gradients(s_batch, a_outs)
+                actor.train(s_batch, grads[0])
+
+                # Update target networks
+                actor.update_target_network()
+                critic.update_target_network()
+
+            if terminal:
+                break
