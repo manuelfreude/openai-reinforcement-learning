@@ -212,25 +212,25 @@ def sarsamax(env, num_episodes, alpha, gamma, window):
     return avg_rewards, best_avg_reward
 
 
-num_episodes = 20000
-alpha = 0.618
-gamma = 0.7
+num_episodes = 40000
+alpha = 0.618 #best 0.618
+gamma = 0.7 #best 0.7
+window = 100 #best
+
+td_prediction(env, num_episodes, alpha, gamma, window)      #best score 9.483
+
+
+num_episodes = 40000
+alpha = 0.618 #best 0.618
+gamma = 1.0 #best 1.0
 window = 100
 
-td_prediction(env, num_episodes, alpha, gamma, window)
+sarsa(env, num_episodes, alpha, gamma, window)              #best score 9.331
 
 
-num_episodes = 20000
-alpha = 0.618
-gamma = 1.2
+num_episodes = 40000
+alpha = 0.3 #best 0.3
+gamma = 1.0 #best 1.0
 window = 100
 
-sarsa(env, num_episodes, alpha, gamma, window)
-
-
-num_episodes = 20000
-alpha = 0.3
-gamma = 1.2
-window = 100
-
-sarsamax(env, num_episodes, alpha, gamma, window)
+sarsamax(env, num_episodes, alpha, gamma, window)           #best score 9.367
