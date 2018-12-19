@@ -279,7 +279,7 @@ def train(sess, env, args, actor, critic, actor_noise):
         ep_ave_max_q = 0
 
         for j in range(int(args['max_episode_len'])):
-
+            env.render() #Updated by manuelfreude
             if args['render_env']:
                 env.render()
 
@@ -419,7 +419,7 @@ MINIBATCH_SIZE = 64
 MAX_EPISODES = 50000
 MAX_EP_STEPS = 1000
 GAMMA = 0.99
-...
+#here something is missing, removed "..."
 
 with tf.Session() as sess:
 
