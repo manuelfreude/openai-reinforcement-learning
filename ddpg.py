@@ -257,7 +257,7 @@ def train(sess, env, args, actor, critic, actor_noise):
     summary_ops, summary_vars = build_summaries()
 
     sess.run(tf.global_variables_initializer())
-    writer = tf.summary.FileWriter(args['summary_dir'], sess.graph)
+    writer = tf.summary.FileWriter('summaries', sess.graph)
 
     # Initialize target network weights
     actor.update_target_network()
@@ -416,8 +416,8 @@ ACTOR_LEARNING_RATE = 0.0001
 CRITIC_LEARNING_RATE = 0.001
 BUFFER_SIZE = 1000000
 MINIBATCH_SIZE = 64
-MAX_EPISODES = 50000
-MAX_EP_STEPS = 1000
+MAX_EPISODES = 50000 #original: 50.000
+MAX_EP_STEPS = 1000 #original: 1.000
 GAMMA = 0.99
 #here something is missing, removed "..."
 
@@ -498,3 +498,7 @@ with tf.Session() as sess:
 
             if terminal:
                 break
+
+            print("Run the command line:\n" \
+                  "--> tensorboard --logdir=/tmp/tensorflow_logs" \
+                  "\nThen open http://0.0.0.0:6006/ into your web browser")

@@ -15,6 +15,7 @@ from keras.layers import BatchNormalization, Dense, Dropout, Input
 from keras.layers.merge import Add, Multiply
 from keras.optimizers import Adam
 import keras.backend as K
+import csv
 
 import tensorflow as tf
 
@@ -196,26 +197,36 @@ def main():
     env = gym.make("Pendulum-v0")
     actor_critic = ActorCritic(env, sess)
 
-    num_trials = 10000
+    num_trials = 10
     trial_len = 500
 
     cur_state = env.reset()
     action = env.action_space.sample()
 
-    while True:
-        cur_state = cur_state.reshape((1, env.observation_space.shape[0]))
-        env.render() #you need to run this in the Python script
-        action = actor_critic.act(cur_state)
-        action = action.reshape((1, env.action_space.shape[0]))
+    file_output = 'data_DDPG_keras.csv'
+    labels = ['Reward DDPG keras']
 
-        new_state, reward, done, _ = env.step(action)
-        new_state = new_state.reshape((1, env.observation_space.shape[0]))
+    with open(file_output, 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(labels)
 
-        actor_critic.remember(cur_state, action, reward, new_state, done)
-        actor_critic.train()
+        while True:
+            cur_state = cur_state.reshape((1, env.observation_space.shape[0]))
+            env.render() #you need to run this in the Python script
+            action = actor_critic.act(cur_state)
+            action = action.reshape((1, env.action_space.shape[0]))
 
-        cur_state = new_state
+            new_state, reward, done, _ = env.step(action)
+            new_state = new_state.reshape((1, env.observation_space.shape[0]))
 
+            actor_critic.remember(cur_state, action, reward, new_state, done)
+            actor_critic.train()
+
+            cur_state = new_state
+
+            if done:
+                print(reward)
+                writer.writerow([reward])
 
 if __name__ == "__main__":
         main()
