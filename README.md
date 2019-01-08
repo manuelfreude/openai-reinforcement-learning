@@ -33,7 +33,7 @@ The TensorFlow code is obtained from https://github.com/msinto93/DDPG/ and sligh
 
 ## DDPG actor-critic for MountainCarContinuous-v0 environment (tsteidle code)
 
-The code is obtained from https://github.com/tobiassteidle/Reinforcement-Learning/tree/master/OpenAI/MountainCarContinuous-v0 and slightly modified for the number of training episodes. In the first run, the code solved the environment after 36 episodes, performance differed for further episodes. The results are shown below:
+The code is obtained from https://github.com/tobiassteidle/Reinforcement-Learning/tree/master/OpenAI/MountainCarContinuous-v0 and slightly modified for the number of training episodes. I have used the msinto DDPG architecture from the pendulum environment solution, but application for the mountaincar continuous environment was not successful compared to tsteidle's code. Here, in the first run, the code solved the environment after 36 episodes, performance differed for further episodes. The results are shown below:
 
 ![mountaincar leader rewards](https://github.com/manuelfreude/openai-reinforcement-learning/blob/master/mountaincarcont_rewards.png)
 
