@@ -29,6 +29,6 @@ The TensorFlow code is obtained from https://github.com/pemami4911/deep-rl and s
 
 The TensorFlow code is obtained from https://github.com/pemami4911/deep-rl and slightly modified for the number of training episodes. The code's performance is really well. For about 75 episodes, the rewards indicate a clear learning curve with very good rewards at episodes 26 and 45 (note that the pendulum starts at random positions) already and a peak reward at just about 0 (episode 60), a way faster learning than the pemami, the new one graphed here:
 
-![ddpg leader rewards](https://github.com/manuelfreude/openai-reinforcement-learning/blob/master/leader_tf_rewards.png)
+![ddpg leader rewards](https://github.com/manuelfreude/openai-reinforcement-learning/blob/master/leader_tf_rewards_2.png)
 
 ## Further environments and code will follow
